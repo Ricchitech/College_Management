@@ -1,0 +1,965 @@
+Private Sub Form_Load()
+Timer1.Enabled = True
+Me.Left = (Screen.Width - Me.Width) / 2
+Me.Top = (Screen.Height - Me.Height) / 2
+End Sub
+
+
+
+Private Sub Timer1_Timer()
+ProgressBar1.Value = ProgressBar1.Value + 5
+If (ProgressBar1.Value = ProgressBar1.Max) Then
+Timer1.Enabled = False
+Form2.Show
+Unload Me
+End If
+End Sub
+
+Private Sub Combo1_Click()
+Adodc1.RecordSource = "select * from Admission where Course = '" + Combo1.Text + "'"
+Adodc1.Refresh
+End Sub
+
+Private Sub Command1_Click()
+If Option1.Value = True Then
+    If Not Text1.Text = "" Then
+        Adodc1.Recordset.Filter = "Reg_No like '%" & Text1.Text & "%'"
+    Else
+    Adodc1.Refresh
+    MsgBox "Sorry No Students Found", , "CMS"
+    End If
+Else
+    If Not Text1.Text = "" Then
+        Adodc1.Recordset.Filter = "Name like '%" & Text1.Text & "%'"
+    Else
+        Adodc1.Refresh
+         MsgBox "Sorry No Students Found", , "CMS"
+    End If
+End If
+End Sub
+
+Private Sub Command2_Click()
+Adodc1.RecordSource = "select * from Admission"
+Adodc1.Refresh
+End Sub
+
+Private Sub newmenu_Click()
+Form3.Show
+Unload Me
+End Sub
+
+
+Private Sub Combo1_Click()
+Adodc1.RecordSource = "select * from Fee where Course = '" + Combo1.Text + "'"
+Adodc1.Refresh
+End Sub
+
+Private Sub Command1_Click()
+If Option1.Value = True Then
+If Not Text1.Text = "" Then
+Adodc1.Recordset.Filter = "Reg_No like '%" & Text1.Text & "%'"
+Else
+Adodc1.Refresh
+MsgBox "Sorry No Student Found", , "CMS"
+End If
+Else
+If Not Text1.Text = "" Then
+Adodc1.Recordset.Filter = "Name like '%" & Text1.Text & "%'"
+Else
+Adodc1.Refresh
+MsgBox "Sorry No Student Found", , "CMS"
+End If
+End If
+End Sub
+
+Private Sub Command2_Click()
+Adodc1.RecordSource = "select * from Fee"
+Adodc1.Refresh
+End Sub
+
+Private Sub homebtn_Click()
+Form3.Show
+Unload Me
+End Sub
+
+Dim pic As String
+
+Private Sub Form_Load()
+Text5.Enabled = False
+Text7.Enabled = False
+Text9.Enabled = False
+updatebtn1.Visible = False
+updatebtn2.Visible = False
+End Sub
+
+Private Sub getstudbtn_Click()
+Adodc2.RecordSource = "select * from Admission where Reg_No = '" + Text1.Text + "'"
+Adodc2.Refresh
+If Adodc2.Recordset.RecordCount = 0 Then
+MsgBox "No Data Found"
+Text1.Text = ""
+ElseIf Adodc2.Recordset.RecordCount = 1 Then
+Dim IAEdit As String
+IAEdit = MsgBox("Data Already Updated Do you want to Edit?", vbYesNoCancel + vbInformation)
+If IAEdit = vbYes Then
+updatebtn2.Visible = True
+Adodc1.RecordSource = "select * from Internal where Reg_No = '" + Text1.Text + "'"
+Adodc1.Refresh
+pic = Adodc2.Recordset.Fields("Photo").Value
+Image1.Picture = LoadPicture(pic)
+Label12 = Adodc1.Recordset("Name")
+Label13 = Adodc1.Recordset("Gender")
+Label14 = Adodc1.Recordset("Combination")
+Label15 = Adodc1.Recordset("Semester")
+If Label14.Caption = "PCM" Or Label14.Caption = "PMCs" Or Label14.Caption = "CBZ" Or Label14.Caption = "Bio-Technology" Or Label14.Caption = "BCA" Then
+Text5.Enabled = True
+Text7.Enabled = True
+Text9.Enabled = True
+End If
+pic = Adodc2.Recordset.Fields("Photo").Value
+Image1.Picture = LoadPicture(pic)
+Text2 = Adodc1.Recordset("Language_I")
+Text3 = Adodc1.Recordset("Language_II")
+Text4 = Adodc1.Recordset("Core_I")
+Text5 = Adodc1.Recordset("Core_I_Lab")
+Text6 = Adodc1.Recordset("Core_II")
+Text7 = Adodc1.Recordset("Core_II_Lab")
+Text8 = Adodc1.Recordset("Core_III")
+Text9 = Adodc1.Recordset("Core_III_Lab")
+Text10 = Adodc1.Recordset("AdditionalSub")
+Text11 = Adodc1.Recordset("CCA")
+ElseIf IAEdit = vbNo Then
+Text1.Text = ""
+End If
+Else
+Label12 = Adodc2.Recordset("Name")
+Label13 = Adodc2.Recordset("Gender")
+Label14 = Adodc2.Recordset("Combination")
+Label15 = Adodc2.Recordset("Semester")
+If Label14.Caption = "PCM" Or Label14.Caption = "PMCs" Or Label14.Caption = "CBZ" Or Label14.Caption = "Bio-Technology" Or Label14.Caption = "BCA" Then
+Text5.Enabled = True
+Text7.Enabled = True
+Text9.Enabled = True
+End If
+updatebtn1.Visible = True
+End If
+End Sub
+
+Private Sub menuhom_Click()
+Form3.Show
+Unload Me
+End Sub
+
+Private Sub updatebtn1_Click()
+If Text1.Text = "" Or Label12.Caption = "" Or Label13.Caption = "" Or Label14.Caption = "" Or Label15.Caption = "" Or Text2.Text = "" Or Text3.Text = "" Or Text4.Text = "" Or Text6.Text = "" Or Text8.Text = "" Or Text10.Text = "" Or Text11.Text = "" Then
+MsgBox "Enter Valid Marks"
+Else
+Adodc1.Recordset.AddNew
+Adodc1.Recordset.Fields("Reg_No").Value = Text1.Text
+Adodc1.Recordset.Fields("Name").Value = Label12.Caption
+Adodc1.Recordset.Fields("Gender").Value = Label13.Caption
+Adodc1.Recordset.Fields("Combination").Value = Label14.Caption
+Adodc1.Recordset.Fields("Semester").Value = Label15.Caption
+Adodc1.Recordset.Fields("Language_I").Value = Text2.Text
+Adodc1.Recordset.Fields("Language_II").Value = Text3.Text
+Adodc1.Recordset.Fields("Core_I").Value = Text4.Text
+Adodc1.Recordset.Fields("Core_I_Lab").Value = Text5.Text
+Adodc1.Recordset.Fields("Core_II").Value = Text6.Text
+Adodc1.Recordset.Fields("Core_II_Lab").Value = Text7.Text
+Adodc1.Recordset.Fields("Core_III").Value = Text8.Text
+Adodc1.Recordset.Fields("Core_III_Lab").Value = Text9.Text
+Adodc1.Recordset.Fields("AdditionalSub").Value = Text10.Text
+Adodc1.Recordset.Fields("CCA").Value = Text11.Text
+Adodc1.Recordset.Update
+MsgBox "Updated"
+Text1.Text = ""
+Label12.Caption = ""
+Label13.Caption = ""
+Label14.Caption = ""
+Label15.Caption = ""
+Text2.Text = ""
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+End If
+End Sub
+
+Private Sub updatebtn2_Click()
+If Text1.Text = "" Or Label12.Caption = "" Or Label13.Caption = "" Or Label14.Caption = "" Or Label15.Caption = "" Or Text2.Text = "" Or Text3.Text = "" Or Text4.Text = "" Or Text6.Text = "" Or Text8.Text = "" Or Text10.Text = "" Or Text11.Text = "" Then
+MsgBox "Enter Valid Marks"
+Else
+Adodc1.Recordset.Fields("Reg_No").Value = Text1.Text
+Adodc1.Recordset.Fields("Name").Value = Label12.Caption
+Adodc1.Recordset.Fields("Gender").Value = Label13.Caption
+Adodc1.Recordset.Fields("Combination").Value = Label14.Caption
+Adodc1.Recordset.Fields("Semester").Value = Label15.Caption
+Adodc1.Recordset.Fields("Language_I").Value = Text2.Text
+Adodc1.Recordset.Fields("Language_II").Value = Text3.Text
+Adodc1.Recordset.Fields("Core_I").Value = Text4.Text
+Adodc1.Recordset.Fields("Core_I_Lab").Value = Text5.Text
+Adodc1.Recordset.Fields("Core_II").Value = Text6.Text
+Adodc1.Recordset.Fields("Core_II_Lab").Value = Text7.Text
+Adodc1.Recordset.Fields("Core_III").Value = Text8.Text
+Adodc1.Recordset.Fields("Core_III_Lab").Value = Text9.Text
+Adodc1.Recordset.Fields("AdditionalSub").Value = Text10.Text
+Adodc1.Recordset.Fields("CCA").Value = Text11.Text
+Adodc1.Recordset.Update
+MsgBox "Updated"
+Text1.Text = ""
+Label12.Caption = ""
+Label13.Caption = ""
+Label14.Caption = ""
+Label15.Caption = ""
+Text2.Text = ""
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+End If
+End Sub
+
+
+Dim pic As String
+
+Private Sub calcbtn_Click()
+Adodc2.RecordSource = "select * from FeeStructure where Course = '" + Text5.Text + "'"
+Adodc2.Refresh
+Text8 = Adodc2.Recordset("AcademicYear")
+Text9 = Adodc2.Recordset("EntryFee")
+Text10 = Adodc2.Recordset("AdmissionFee")
+Text11 = Adodc2.Recordset("TutionFee")
+Text12 = Adodc2.Recordset("LabFee")
+Text13 = Adodc2.Recordset("HealthCheckFee")
+Text14 = Adodc2.Recordset("SportsFee")
+Text15 = Adodc2.Recordset("LibraryFee")
+Text16 = Adodc2.Recordset("EtcFee")
+Text17 = Val(Text9) + Val(Text10) + Val(Text11) + Val(Text12) + Val(Text13) + Val(Text14) + Val(Text15) + Val(Text16)
+collectbtn.Visible = True
+End Sub
+
+Private Sub collectbtn_Click()
+Adodc1.Recordset.AddNew
+Adodc1.Recordset.Fields("Reg_No").Value = Text1.Text
+Adodc1.Recordset.Fields("Name").Value = Text2.Text
+Adodc1.Recordset.Fields("Gender").Value = Text3.Text
+Adodc1.Recordset.Fields("Category").Value = Text4.Text
+Adodc1.Recordset.Fields("Course").Value = Text5.Text
+Adodc1.Recordset.Fields("Combination").Value = Text6.Text
+Adodc1.Recordset.Fields("Semester").Value = Text7.Text
+Adodc1.Recordset.Fields("AcademicYear").Value = Text8.Text
+Adodc1.Recordset.Fields("EntryFee").Value = Text9.Text
+Adodc1.Recordset.Fields("AdmissionFee").Value = Text10.Text
+Adodc1.Recordset.Fields("TutionFee").Value = Text11.Text
+Adodc1.Recordset.Fields("LabFee").Value = Text12.Text
+Adodc1.Recordset.Fields("HealthCheckFee").Value = Text13.Text
+Adodc1.Recordset.Fields("SportsFee").Value = Text14.Text
+Adodc1.Recordset.Fields("LibraryFee").Value = Text15.Text
+Adodc1.Recordset.Fields("EtcFee").Value = Text16.Text
+Adodc1.Recordset.Fields("Total").Value = Text17.Text
+Adodc1.Recordset.Fields("FeePaidDate").Value = Format(Now, "dd/mm/yyyy")
+Adodc1.Recordset.Update
+MsgBox "Updated"
+Text1.Text = ""
+Text2.Text = ""
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+Text12.Text = ""
+Text13.Text = ""
+Text14.Text = ""
+Text15.Text = ""
+Text16.Text = ""
+End Sub
+
+Private Sub Form_Load()
+collectbtn.Visible = False
+calcbtn.Visible = False
+End Sub
+
+Private Sub getbtn_Click()
+Adodc1.RecordSource = "select * from Fee where Reg_No = '" + Text1.Text + "'"
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 1 Then
+MsgBox "Already Paid"
+Text1.Text = ""
+Else
+Adodc3.RecordSource = "select * from Admission where Reg_No = '" + Text1.Text + "'"
+Adodc3.Refresh
+If Adodc3.Recordset.RecordCount = 0 Then
+MsgBox "No Student Data Found"
+Text1.Text = ""
+Else
+pic = Adodc3.Recordset.Fields("Photo").Value
+Image1.Picture = LoadPicture(pic)
+calcbtn.Visible = True
+Text2 = Adodc3.Recordset("Name")
+Text3 = Adodc3.Recordset("Gender")
+Text4 = Adodc3.Recordset("Category")
+Text5 = Adodc3.Recordset("Course")
+Text6 = Adodc3.Recordset("Combination")
+Text7 = Adodc3.Recordset("Semester")
+End If
+End If
+End Sub
+
+Private Sub menuhm_Click()
+Form3.Show
+Unload Me
+End Sub
+
+
+Dim reg As Integer
+Dim pic As String
+
+Private Sub admit1_Click()
+Image1.Visible = True
+Checkbtn.Visible = False
+newbtn.Visible = True
+Text1.Enabled = False
+End Sub
+
+Private Sub admit2_Click()
+Image1.Visible = True
+Checkbtn.Visible = True
+newbtn.Visible = False
+Text1.Enabled = True
+uploadbtn.Visible = False
+End Sub
+
+Private Sub ADMITBTN_Click()
+If Combo1.Text = "" Or Combo2.Text = "" Or Combo3.Text = "" Or Combo4.Text = "" Or Combo5.Text = "" Or Combo6.Text = "" Or Text1.Text = "" Or Text2.Text = "" Or Text3.Text = "" Or Text4.Text = "" Or Text5.Text = "" Or Text6.Text = "" Or Text7.Text = "" Then
+MsgBox "Enter Correct Details", , "CMS"
+Else
+Adodc1.Recordset.Fields("Reg_No").Value = Text1.Text
+Adodc1.Recordset.Fields("Name").Value = Text2.Text
+Adodc1.Recordset.Fields("DOB").Value = DTPicker1.Value
+Adodc1.Recordset.Fields("Course").Value = Combo1.Text
+Adodc1.Recordset.Fields("Combination").Value = Combo2.Text
+Adodc1.Recordset.Fields("Semester").Value = Combo3.Text
+Adodc1.Recordset.Fields("Previous_Stream").Value = Combo4.Text
+Adodc1.Recordset.Fields("Gender").Value = Combo5.Text
+Adodc1.Recordset.Fields("Category").Value = Combo6.Text
+Adodc1.Recordset.Fields("Previous_Perc").Value = Text3.Text
+Adodc1.Recordset.Fields("Fathername").Value = Text4.Text
+Adodc1.Recordset.Fields("Mothername").Value = Text5.Text
+Adodc1.Recordset.Fields("Cantact_No").Value = Text6.Text
+Adodc1.Recordset.Fields("Address").Value = Text7.Text
+Adodc1.Recordset.Fields("Photo").Value = pic
+Adodc1.Recordset.Fields("AdmitDate").Value = Format(Now, "dd/mm/yyyy")
+Adodc1.Recordset.Update
+MsgBox "successfully admitted", , "CMS"
+Text2.Text = ""
+DTPicker1 = Format(Now, "dd/mm/yyyy")
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+End If
+End Sub
+
+Private Sub Checkbtn_Click()
+Adodc1.RecordSource = "select * from Admission where Reg_No = '" + Text1.Text + "'"
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 0 Then
+MsgBox "No Data Found"
+Text1.Text = ""
+Else
+Text2 = Adodc1.Recordset("Name")
+DTPicker1 = Adodc1.Recordset("DOB")
+Combo1 = Adodc1.Recordset("Course")
+Combo2 = Adodc1.Recordset("Combination")
+Combo3 = Adodc1.Recordset("Semester")
+Combo4 = Adodc1.Recordset("Previous_Stream")
+Combo5 = Adodc1.Recordset("Gender")
+Combo6 = Adodc1.Recordset("Category")
+Text3 = Adodc1.Recordset("Previous_Perc")
+Text4 = Adodc1.Recordset("Fathername")
+Text5 = Adodc1.Recordset("Mothername")
+Text6 = Adodc1.Recordset("Cantact_No")
+Text7 = Adodc1.Recordset("Address")
+pic = Adodc1.Recordset("Photo")
+Image1.Picture = LoadPicture(pic)
+ADMITBTN.Visible = True
+End If
+End Sub
+
+Private Sub Combo1_Click()
+Combo2.Clear
+Combo4.Clear
+If Combo1.Text = "BA" Then
+Combo2.AddItem "HEP"
+Combo2.AddItem "HES"
+Combo2.AddItem "HEJ"
+Combo2.AddItem "HJE"
+Combo4.AddItem "HEPS"
+Combo4.AddItem "HEGP"
+Combo4.AddItem "HEPyS"
+Combo4.AddItem "HELP"
+Combo4.AddItem "HEPK"
+Combo4.AddItem "HESK"
+Combo4.AddItem "HELS"
+Combo4.AddItem "HEKM"
+Combo4.AddItem "HEKK"
+Combo4.AddItem "ELSP"
+Combo4.AddItem "HEKH"
+ElseIf Combo1.Text = "BSC" Then
+Combo2.AddItem "PCM"
+Combo2.AddItem "PMCs"
+Combo2.AddItem "CBZ"
+Combo2.AddItem "Bio-Technology"
+Combo4.AddItem "PCMB"
+Combo4.AddItem "PCMC"
+Combo4.AddItem "PCME"
+Combo4.AddItem "PCMG"
+Combo4.AddItem "PCBH"
+Combo4.AddItem "PCBE"
+ElseIf Combo1.Text = "BCOM" Then
+Combo2.AddItem "BCOM"
+Combo4.AddItem "SEBA"
+Combo4.AddItem "ABEM"
+Combo4.AddItem "BSAM"
+Combo4.AddItem "EABC"
+Combo4.AddItem "HEBA"
+Combo4.AddItem "GEBA"
+Combo4.AddItem "BACS"
+Combo4.AddItem "ABPE"
+ElseIf Combo1.Text = "BBA" Then
+Combo2.AddItem "BBA"
+Combo4.AddItem "SEBA"
+Combo4.AddItem "ABEM"
+Combo4.AddItem "BSAM"
+Combo4.AddItem "EABC"
+Combo4.AddItem "HEBA"
+Combo4.AddItem "GEBA"
+Combo4.AddItem "BACS"
+Combo4.AddItem "ABPE"
+ElseIf Combo1.Text = "BCA" Then
+Combo2.AddItem "BCA"
+Combo4.AddItem "PCMB"
+Combo4.AddItem "PCMC"
+Combo4.AddItem "PCME"
+Combo4.AddItem "PCMG"
+Else
+End If
+End Sub
+
+
+Private Sub Form_Load()
+Combo1.AddItem "BA"
+Combo1.AddItem "BSC"
+Combo1.AddItem "BCOM"
+Combo1.AddItem "BBA"
+Combo1.AddItem "BCA"
+Combo3.AddItem "Semester-I"
+Combo3.AddItem "Semester-II"
+Combo3.AddItem "Semester-III"
+Combo3.AddItem "Semester-IV"
+Combo3.AddItem "Semester-V"
+Combo3.AddItem "Semester-VI"
+Checkbtn.Visible = False
+newbtn.Visible = False
+uploadbtn.Visible = False
+ADMITBTN.Visible = False
+End Sub
+
+Private Sub homemenu_Click()
+Form3.Show
+Form5.Hide
+End Sub
+
+Private Sub newbtn_Click()
+Call AutoReg
+Adodc1.Recordset.AddNew
+Text1 = Format(reg, "17P5V85000")
+uploadbtn.Visible = True
+Text2.Text = ""
+DTPicker1 = Format(Now, "dd/mm/yyyy")
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+End Sub
+
+Public Sub AutoReg()
+On Error GoTo Err_id
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 0 Then
+reg = 1
+Else
+Adodc1.Recordset.MoveLast
+reg = Mid(Adodc1.Recordset("Reg_No"), 9, 10) + 1
+Adodc1.Refresh
+End If
+Exit Sub
+Err_id:
+reg = 1
+MsgBox "Register is not generated", vbCritical, "CMS"
+End Sub
+
+Private Sub uploadbtn_Click()
+Cd1.ShowOpen
+Cd1.Filter = "Jpeg|*.jpg"
+pic = Cd1.FileName
+Image1.Picture = LoadPicture(pic)
+ADMITBTN.Visible = True
+End Sub
+
+
+Dim reg As Integer
+Dim pic As String
+
+Private Sub admit1_Click()
+Image1.Visible = True
+Checkbtn.Visible = False
+newbtn.Visible = True
+Text1.Enabled = False
+End Sub
+
+Private Sub admit2_Click()
+Image1.Visible = True
+Checkbtn.Visible = True
+newbtn.Visible = False
+Text1.Enabled = True
+uploadbtn.Visible = False
+End Sub
+
+Private Sub ADMITBTN_Click()
+If Combo1.Text = "" Or Combo2.Text = "" Or Combo3.Text = "" Or Combo4.Text = "" Or Combo5.Text = "" Or Combo6.Text = "" Or Text1.Text = "" Or Text2.Text = "" Or Text3.Text = "" Or Text4.Text = "" Or Text5.Text = "" Or Text6.Text = "" Or Text7.Text = "" Then
+MsgBox "Enter Correct Details", , "CMS"
+Else
+Adodc1.Recordset.Fields("Reg_No").Value = Text1.Text
+Adodc1.Recordset.Fields("Name").Value = Text2.Text
+Adodc1.Recordset.Fields("DOB").Value = DTPicker1.Value
+Adodc1.Recordset.Fields("Course").Value = Combo1.Text
+Adodc1.Recordset.Fields("Combination").Value = Combo2.Text
+Adodc1.Recordset.Fields("Semester").Value = Combo3.Text
+Adodc1.Recordset.Fields("Previous_Stream").Value = Combo4.Text
+Adodc1.Recordset.Fields("Gender").Value = Combo5.Text
+Adodc1.Recordset.Fields("Category").Value = Combo6.Text
+Adodc1.Recordset.Fields("Previous_Perc").Value = Text3.Text
+Adodc1.Recordset.Fields("Fathername").Value = Text4.Text
+Adodc1.Recordset.Fields("Mothername").Value = Text5.Text
+Adodc1.Recordset.Fields("Cantact_No").Value = Text6.Text
+Adodc1.Recordset.Fields("Address").Value = Text7.Text
+Adodc1.Recordset.Fields("Photo").Value = pic
+Adodc1.Recordset.Fields("AdmitDate").Value = Format(Now, "dd/mm/yyyy")
+Adodc1.Recordset.Update
+MsgBox "successfully admitted", , "CMS"
+Text2.Text = ""
+DTPicker1 = Format(Now, "dd/mm/yyyy")
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+End If
+End Sub
+
+Private Sub Checkbtn_Click()
+Adodc1.RecordSource = "select * from Admission where Reg_No = '" + Text1.Text + "'"
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 0 Then
+MsgBox "No Data Found"
+Text1.Text = ""
+Else
+Text2 = Adodc1.Recordset("Name")
+DTPicker1 = Adodc1.Recordset("DOB")
+Combo1 = Adodc1.Recordset("Course")
+Combo2 = Adodc1.Recordset("Combination")
+Combo3 = Adodc1.Recordset("Semester")
+Combo4 = Adodc1.Recordset("Previous_Stream")
+Combo5 = Adodc1.Recordset("Gender")
+Combo6 = Adodc1.Recordset("Category")
+Text3 = Adodc1.Recordset("Previous_Perc")
+Text4 = Adodc1.Recordset("Fathername")
+Text5 = Adodc1.Recordset("Mothername")
+Text6 = Adodc1.Recordset("Cantact_No")
+Text7 = Adodc1.Recordset("Address")
+pic = Adodc1.Recordset("Photo")
+Image1.Picture = LoadPicture(pic)
+ADMITBTN.Visible = True
+End If
+End Sub
+
+Private Sub Combo1_Click()
+Combo2.Clear
+Combo4.Clear
+If Combo1.Text = "BA" Then
+Combo2.AddItem "HEP"
+Combo2.AddItem "HES"
+Combo2.AddItem "HEJ"
+Combo2.AddItem "HJE"
+Combo4.AddItem "HEPS"
+Combo4.AddItem "HEGP"
+Combo4.AddItem "HEPyS"
+Combo4.AddItem "HELP"
+Combo4.AddItem "HEPK"
+Combo4.AddItem "HESK"
+Combo4.AddItem "HELS"
+Combo4.AddItem "HEKM"
+Combo4.AddItem "HEKK"
+Combo4.AddItem "ELSP"
+Combo4.AddItem "HEKH"
+ElseIf Combo1.Text = "BSC" Then
+Combo2.AddItem "PCM"
+Combo2.AddItem "PMCs"
+Combo2.AddItem "CBZ"
+Combo2.AddItem "Bio-Technology"
+Combo4.AddItem "PCMB"
+Combo4.AddItem "PCMC"
+Combo4.AddItem "PCME"
+Combo4.AddItem "PCMG"
+Combo4.AddItem "PCBH"
+Combo4.AddItem "PCBE"
+ElseIf Combo1.Text = "BCOM" Then
+Combo2.AddItem "BCOM"
+Combo4.AddItem "SEBA"
+Combo4.AddItem "ABEM"
+Combo4.AddItem "BSAM"
+Combo4.AddItem "EABC"
+Combo4.AddItem "HEBA"
+Combo4.AddItem "GEBA"
+Combo4.AddItem "BACS"
+Combo4.AddItem "ABPE"
+ElseIf Combo1.Text = "BBA" Then
+Combo2.AddItem "BBA"
+Combo4.AddItem "SEBA"
+Combo4.AddItem "ABEM"
+Combo4.AddItem "BSAM"
+Combo4.AddItem "EABC"
+Combo4.AddItem "HEBA"
+Combo4.AddItem "GEBA"
+Combo4.AddItem "BACS"
+Combo4.AddItem "ABPE"
+ElseIf Combo1.Text = "BCA" Then
+Combo2.AddItem "BCA"
+Combo4.AddItem "PCMB"
+Combo4.AddItem "PCMC"
+Combo4.AddItem "PCME"
+Combo4.AddItem "PCMG"
+Else
+End If
+End Sub
+
+
+Private Sub Form_Load()
+Combo1.AddItem "BA"
+Combo1.AddItem "BSC"
+Combo1.AddItem "BCOM"
+Combo1.AddItem "BBA"
+Combo1.AddItem "BCA"
+Combo3.AddItem "Semester-I"
+Combo3.AddItem "Semester-II"
+Combo3.AddItem "Semester-III"
+Combo3.AddItem "Semester-IV"
+Combo3.AddItem "Semester-V"
+Combo3.AddItem "Semester-VI"
+Checkbtn.Visible = False
+newbtn.Visible = False
+uploadbtn.Visible = False
+ADMITBTN.Visible = False
+End Sub
+
+Private Sub homemenu_Click()
+Form3.Show
+Form5.Hide
+End Sub
+
+Private Sub newbtn_Click()
+Call AutoReg
+Adodc1.Recordset.AddNew
+Text1 = Format(reg, "17P5V85000")
+uploadbtn.Visible = True
+Text2.Text = ""
+DTPicker1 = Format(Now, "dd/mm/yyyy")
+Text3.Text = ""
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+End Sub
+
+Public Sub AutoReg()
+On Error GoTo Err_id
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 0 Then
+reg = 1
+Else
+Adodc1.Recordset.MoveLast
+reg = Mid(Adodc1.Recordset("Reg_No"), 9, 10) + 1
+Adodc1.Refresh
+End If
+Exit Sub
+Err_id:
+reg = 1
+MsgBox "Register is not generated", vbCritical, "CMS"
+End Sub
+
+Private Sub uploadbtn_Click()
+Cd1.ShowOpen
+Cd1.Filter = "Jpeg|*.jpg"
+pic = Cd1.FileName
+Image1.Picture = LoadPicture(pic)
+ADMITBTN.Visible = True
+End Sub
+
+Private Sub Combo2_Click()
+Adodc2.RecordSource = "select * from FeeStructure where Course = '" + Combo2.Text + "'"
+Adodc2.Refresh
+If Adodc2.Recordset.RecordCount = 0 Then
+Command2.Enabled = True
+Command3.Enabled = False
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+Text12.Text = ""
+ElseIf Adodc2.Recordset.RecordCount = 1 Then
+Command3.Enabled = True
+Command2.Enabled = False
+Text4 = Adodc2.Recordset("AcademicYear")
+Text5 = Adodc2.Recordset("EntryFee")
+Text6 = Adodc2.Recordset("AdmissionFee")
+Text7 = Adodc2.Recordset("TutionFee")
+Text8 = Adodc2.Recordset("LabFee")
+Text9 = Adodc2.Recordset("HealthCheckFee")
+Text10 = Adodc2.Recordset("SportsFee")
+Text11 = Adodc2.Recordset("EtcFee")
+Text12 = Adodc2.Recordset("LibraryFee")
+End If
+End Sub
+
+Private Sub Command1_Click()
+Frame1.Visible = False
+End Sub
+
+Private Sub Command2_Click()
+Adodc2.Recordset.AddNew
+Adodc2.Recordset.Fields("Course").Value = Combo2.Text
+Adodc2.Recordset.Fields("AcademicYear").Value = Text4.Text
+Adodc2.Recordset.Fields("EntryFee").Value = Text5.Text
+Adodc2.Recordset.Fields("AdmissionFee").Value = Text6.Text
+Adodc2.Recordset.Fields("TutionFee").Value = Text7.Text
+Adodc2.Recordset.Fields("LabFee").Value = Text8.Text
+Adodc2.Recordset.Fields("HealthCheckFee").Value = Text9.Text
+Adodc2.Recordset.Fields("SportsFee").Value = Text10.Text
+Adodc2.Recordset.Fields("EtcFee").Value = Text11.Text
+Adodc2.Recordset.Fields("LibraryFee").Value = Text12.Text
+Adodc2.Recordset.Update
+MsgBox "New Fee Structure Added", , "CMS"
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+Text12.Text = ""
+End Sub
+
+Private Sub Command3_Click()
+Adodc2.Recordset.Fields("Course").Value = Combo2.Text
+Adodc2.Recordset.Fields("AcademicYear").Value = Text4.Text
+Adodc2.Recordset.Fields("EntryFee").Value = Text5.Text
+Adodc2.Recordset.Fields("AdmissionFee").Value = Text6.Text
+Adodc2.Recordset.Fields("TutionFee").Value = Text7.Text
+Adodc2.Recordset.Fields("LabFee").Value = Text8.Text
+Adodc2.Recordset.Fields("HealthCheckFee").Value = Text9.Text
+Adodc2.Recordset.Fields("SportsFee").Value = Text10.Text
+Adodc2.Recordset.Fields("EtcFee").Value = Text11.Text
+Adodc2.Recordset.Fields("LibraryFee").Value = Text12.Text
+Adodc2.Recordset.Update
+MsgBox "Fee Structure Updated", , "CMS"
+Text4.Text = ""
+Text5.Text = ""
+Text6.Text = ""
+Text7.Text = ""
+Text8.Text = ""
+Text9.Text = ""
+Text10.Text = ""
+Text11.Text = ""
+Text12.Text = ""
+End Sub
+
+Private Sub Form_Load()
+Frame1.Visible = False
+Command2.Enabled = False
+Command3.Enabled = False
+Combo2.AddItem "BA"
+Combo2.AddItem "BSC"
+Combo2.AddItem "BCOM"
+Combo2.AddItem "BBA"
+Combo2.AddItem "BCA"
+End Sub
+
+Private Sub menufeestructure_Click()
+Frame1.Visible = True
+End Sub
+
+Private Sub menuhome_Click()
+Form3.Show
+Unload Me
+End Sub
+
+Private Sub newuserbtn_Click()
+If Text1.Text = "" Or Text2.Text = "" Or Text3.Text = "" Then
+MsgBox "enter valid details"
+Else
+Adodc1.Recordset.AddNew
+Adodc1.Recordset.Fields("UserType").Value = Combo1.Text
+Adodc1.Recordset.Fields("Username").Value = Text1.Text
+If Text2.Text = Text3.Text Then
+Adodc1.Recordset.Fields("Password").Value = Text3.Text
+Adodc1.Recordset.Fields("DOB").Value = DTPicker1.Value
+Adodc1.Recordset.Update
+MsgBox "New User Added Successfully", , "CMS"
+Text1.Text = ""
+Text2.Text = ""
+Text3.Text = ""
+Else
+MsgBox "password not matched", , "CMS"
+Text2.Text = ""
+Text3.Text = ""
+End If
+End If
+End Sub
+
+Private Sub admitmenu_Click()
+Form5.Show
+Form3.Hide
+End Sub
+
+Private Sub feemenu_Click()
+Form6.Show
+Form3.Hide
+End Sub
+
+Private Sub internalsmenu_Click()
+Form7.Show
+Form3.Hide
+End Sub
+
+Private Sub mnulog_Click()
+Form2.Show
+Unload Me
+End Sub
+
+Private Sub mnuusr_Click()
+Form4.Show
+Form3.Hide
+End Sub
+
+Private Sub report1_Click()
+Form8.Show
+Form3.Hide
+End Sub
+
+Private Sub report2_Click()
+Form9.Show
+Form3.Hide
+End Sub
+
+Private Sub report3_Click()
+Form10.Show
+Form3.Hide
+End Sub
+
+Private Sub Command2_Click()
+Unload Me
+End Sub
+
+Private Sub Form_Load()
+Timer1.Enabled = True
+Me.Left = (Screen.Width - Me.Width) / 2
+Me.Top = (Screen.Height - Me.Height) / 2
+End Sub
+
+Private Sub loginbtn_Click()
+If Text1 = "" Or Text2 = "" Then
+MsgBox "Please Enter Details"
+Text1.SetFocus
+Exit Sub
+End If
+Adodc1.RecordSource = "select * from Login where UserType = '" + Combo1.Text + "' and Username = '" + Text1.Text + "' and Password = '" + Text2.Text + "'"
+Adodc1.Refresh
+If Adodc1.Recordset.RecordCount = 0 Then
+MsgBox " Login Failed"
+Text1.Text = ""
+Text2.Text = ""
+Else
+MsgBox "Login Successfull"
+Select Case Combo1.Text
+Case "Management"
+Form3.internalsmenu.Visible = False
+Case "Office"
+Form3.mnuusr.Visible = False
+Form3.internalsmenu.Visible = False
+Case "Teacher"
+Form3.mnuusr.Visible = False
+Form3.admitmenu.Visible = False
+Form3.feemenu.Visible = False
+End Select
+Form3.Show
+Unload Me
+Exit Sub
+End If
+End Sub
+
+Private Sub Combo1_Click()
+Adodc1.RecordSource = "select * from Internal where Course = '" + Combo1.Text + "'"
+Adodc1.Refresh
+End Sub
+
+Private Sub Command1_Click()
+If Option1.Value = True Then
+    If Not Text1.Text = "" Then
+        Adodc1.Recordset.Filter = "Reg_No like '%" & Text1.Text & "%'"
+    Else
+    Adodc1.Refresh
+    MsgBox "Sorry No Student Found", , "CMS"
+    End If
+Else
+    If Not Text1.Text = "" Then
+        Adodc1.Recordset.Filter = "Combination like '%" & Text1.Text & "%'"
+    Else
+        Adodc1.Refresh
+         MsgBox "Sorry No Student Found", , "CMS"
+    End If
+End If
+End Sub
+
+Private Sub Command2_Click()
+Adodc1.RecordSource = "select * from Internal"
+Adodc1.Refresh
+End Sub
+
+Private Sub home1_Click()
+Form3.Show
+Unload Me
+End Sub
+
+
